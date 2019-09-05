@@ -9,7 +9,7 @@ Actions in action_space are all actuators of objects added during world building
 
 ## Installation
 
-This repository requires the MuJoCo physics engine. To install MuJoCo, follow the instructions in the [mujoco-py](https://github.com/openai/mujoco-py) repository.
+This repository requires the MuJoCo physics engine (the repository has been tested with MuJoCo 1.50). To install MuJoCo, follow the instructions in the [mujoco-py](https://github.com/openai/mujoco-py/tree/1.50.1.0) repository.
 
 ```
 pip install -r requirements.txt
