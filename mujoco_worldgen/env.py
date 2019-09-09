@@ -113,7 +113,6 @@ class Env(gym.Env):
         # These are required by Gym
         self._action_space = action_space
         self._observation_space = None
-        self._spec = Spec(max_episode_steps=horizon, timestep_limit=horizon)
         self._name = None
 
     # This is to mitigate issues with old/new envs
@@ -417,15 +416,6 @@ class EmptyEnvException(Exception):
 ###############################################################################
 
 
-class Spec(object):
-    # required by gym.wrappers.Monitor
-
-    def __init__(self, max_episode_steps=np.inf, timestep_limit=np.inf):
-        self.id = "worldgen.env"
-        self.max_episode_steps = max_episode_steps
-        self.timestep_limit = timestep_limit
-
-
 def gym_space_from_arrays(arrays):
     if isinstance(arrays, np.ndarray):
         ret = Box(-np.inf, np.inf, arrays.shape, np.float32)
@@ -437,47 +427,3 @@ def gym_space_from_arrays(arrays):
     else:
         raise TypeError("Array is of unsupported type.")
     return ret
-
-
-def env_broadcast(self, name, args=None):
-    """
-    Allows sending of a generic event to an environment subclass.
-    Will also propagate through any Wrappers surrounding env.
-
-    Returns:
-        object: Returns the result of event implementation.
-    """
-    return self.event(name, args)
-
-
-def env_event(self, name, args=None):
-    """
-    Override this in an Env or Wrapper subclass to handle
-    any specific event propagated through the stack.
-
-    Returns:
-        object: Subclasses can return any desired result or None.
-    """
-    return None
-
-
-gym.Env.broadcast = env_broadcast
-gym.Env.event = env_event
-
-
-def wrapper_broadcast(self, name, args=None):
-    """
-    Allows sending of a generic event to a Wrapper or Env subclass.
-    Will propagate event through all Wrappers down to and including Env.
-    If any layer's 'event' method implementation returns a non-None result,
-    that result will be returned from the outer-most event call.
-
-    Returns:
-        object: Outer-most non-None result from event method implementations.
-    """
-    result = self.event(name, args)
-    inner_result = self.env.broadcast(name, args)
-    return inner_result if result is None else result
-
-
-gym.Wrapper.broadcast = wrapper_broadcast

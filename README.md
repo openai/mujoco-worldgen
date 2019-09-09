@@ -2,10 +2,11 @@
 
 # Worldgen: Randomized MuJoCo environments
 
-Worldgen allows to generate complex, heavily randomized environments
-with goals. Examples of such environments can be found in the `examples` folder.
+Worldgen allows users to generate complex, heavily randomized environments environments. Examples of such environments can be found in the `examples` folder.
 
 Actions in `action_space` are all actuators of objects added during world building. Not all objects will have actuators, but some do (e.g. `ObjFromXML('particle')` and `ObjFromXML('particle_hinge')`). You can examine the meaning of a given action by looking at the xml file of the object in `assets/xmls/.../main.xml`
+
+Observation spaces are inferred based on the outputs of the `get_obs` function in an `Env` object (`Env` class is defined in `mujoco_worldgen/env.py`.
 
 ## Installation
 
@@ -69,7 +70,7 @@ Here's an example of adding geometries to our world:
 
 The `append()` function allows to specify a placement indicator (Usually “top” or “inside”).
 Placements are spaces we’re able to place objects. 
-Placements world-aligned rectangular prisms, which objects can be oriented within.  All objects within a placement align along the bottom (and are positioned with X,Y coordinates).
+Placements are always world-aligned rectangular prisms, which objects can be oriented within.  All objects within a placement align along the bottom (and are positioned with X,Y coordinates).
 If there are multiple placements for a given name (e.g. “inside\_0”, “inside\_1”, …) then we choose one at random.
 The default placement name is “top”. 
 
@@ -98,6 +99,29 @@ We can specify the size of a geom by providing a second parameter: `Geom("box", 
 For a cube: `Geom("box", 0.25)` results in “box” of size 25cm x 25cm x 25cm.
 Moreover, we can provide a range to sample a random size box: `Geom("box", (0.1, 0.2, 0.3), (1.1, 1.2, 1.3))`.
 Size of this box would be random between 10cm x 20cm x 30cm and 1.1m x 1.2m x 1.3m.
+
+### Sites
+You can create sites - static markers on an object - by calling `obj.mark()`. The current position of all created sites is stored in the `sim` object of the worldgen environment. For more information on sites, check out the `mark` function in the `Obj` class defined in `mujoco_worldgen/objs/obj.py`
+
+Example usage:
+```
+# Create a floor and a box
+floor = Floor()
+box = Geom('box')
+
+# Mark sites on floor and box
+floor.mark(mark_name='floor_site', relative_xyz=(0.2, 0.2, 0))
+box.mark(mark_name='box_site', relative_xyz=(0, 0, 0.5))
+
+# Add box to floor, add the floor to the builder, and create a sim with the builder
+floor.append(box)
+builder.append(floor)
+sim = builder.get_sim()
+
+# Get the current position of the floor site and the box site
+floor_site_pos = sim.data.site_xpos[sim.model.site_name2id('floor_site')]
+box_site_pos = sim.data.site_xpos[sim.model.site_name2id('box_site')]
+```
 
 ### Environments
 
