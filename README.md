@@ -2,19 +2,19 @@
 
 # Worldgen: Randomized MuJoCo environments
 
-Worldgen allows users to generate complex, heavily randomized environments environments. Examples of such environments can be found in the `examples` folder.
+Worldgen allows users to generate complex, heavily randomized environments. Examples of such environments can be found in the [examples](./examples) folder.
 
 Actions in `action_space` are all actuators of objects added during world building. Not all objects will have actuators, but some do (e.g. `ObjFromXML('particle')` and `ObjFromXML('particle_hinge')`). You can examine the meaning of a given action by looking at the xml file of the object in `assets/xmls/.../main.xml`
 
-Observation spaces are inferred based on the outputs of the `get_obs` function in an `Env` object (`Env` class is defined in `mujoco_worldgen/env.py`.
+Observation spaces are inferred based on the outputs of the [get_obs](./mujoco_worldgen/env.py) function in an `Env` object.
 
 ## Installation
 
 This repository requires the MuJoCo physics engine (the repository has been tested with MuJoCo 1.50). To install MuJoCo, follow the instructions in the [mujoco-py](https://github.com/openai/mujoco-py/tree/1.50.1.0) repository.
 
 ```
-    pip install -r requirements.txt
-    pip install -e .
+pip install -r requirements.txt
+pip install -e .
 ```
 
 This repository has been used on Mac OS X and Ubuntu 16.04 with Python 3.6
@@ -26,7 +26,7 @@ This repository has been used on Mac OS X and Ubuntu 16.04 with Python 3.6
 Let’s analyze an example of one such generation.  First we create the `WorldParams`:
 
 ```
-    world_params = WorldParams(size=(5, 5, 3.5))
+world_params = WorldParams(size=(5, 5, 3.5))
 ```
 
 This defines the global properties of our generated world.
@@ -43,7 +43,7 @@ The following are all optional paramaters with defaults:
 Then, we create a builder. The `WorldBuilder` constructor takes a `WorldParams` object and `seed`, which is used for randomization:
 
 ```
-	builder = WorldBuilder(world_params, seed)
+builder = WorldBuilder(world_params, seed)
 ```
 
 ### Placing objects
@@ -51,21 +51,21 @@ Then, we create a builder. The `WorldBuilder` constructor takes a `WorldParams` 
 Here's an example of adding geometries to our world:
 
 ```
-    # Create a floor
-    floor = Floor()
+# Create a floor
+floor = Floor()
 
-    # Load geometries from XML, and add to floor
-    robot = ObjFromXML("particle")
-    floor.append(robot)
-    sphere = ObjFromXML("sphere")
-    floor.append(sphere)
+# Load geometries from XML, and add to floor
+robot = ObjFromXML("particle")
+floor.append(robot)
+sphere = ObjFromXML("sphere")
+floor.append(sphere)
 
-    # Create a primitive geometry, and add to floor
-    box = Geom('box')
-    floor.append(box)
+# Create a primitive geometry, and add to floor
+box = Geom('box')
+floor.append(box)
 
-    # Add the root floor to the builder
-    builder.append(floor)
+# Add the root floor to the builder
+builder.append(floor)
 ```
 
 The `append()` function allows to specify a placement indicator (Usually “top” or “inside”).
@@ -77,7 +77,7 @@ The default placement name is “top”.
 To customize the placement position:
 
 ```
-    obj.append(child_obj, placement_name="top", placement_xy=None)
+obj.append(child_obj, placement_name="top", placement_xy=None)
 ```
 
 `placement_xy` is None if you want the world generation algorithm to randomly place it.
@@ -87,9 +87,9 @@ The object will be placed within the bounds, scaled by its size.
 be known until generation time. To add some more objects:
 
 ```
-    obj.append(child_obj, 'top', (0.5, 1))  # placed in the center of the back
-    obj.append(child_obj, 'top', (0.5, 0.5))  # placed in the center
-    obj.append(child_obj, 'top', (0, 0))  # placed in the lower left corner
+obj.append(child_obj, 'top', (0.5, 1))  # placed in the center of the back
+obj.append(child_obj, 'top', (0.5, 0.5))  # placed in the center
+obj.append(child_obj, 'top', (0, 0))  # placed in the lower left corner
 ```
 
 ### Geoms
@@ -131,15 +131,15 @@ You can create new environments with Worldgen by subclassing the `Env` class and
 - `_get_obs`
 - `_get_reward` : You can also use a reward wrapper instead of defining this.
 
-You can see two examples in the `examples` folder - the `simple_particle` environment and the `particle_gather` environment.
-You can test out environments using the `/bin/examine` script, providing either a python script defining the `make_env` or a jsonnet file.
+You can see two examples in the [examples](./examples) folder - the [simple_particle](./examples/simple_particle.py) environment and the [particle_gather](./examples/particle_gather.py) environment.
+You can test out environments using the [examine script](./bin/examine.py), providing either a python script defining the `make_env` or a jsonnet file.
 
 ```
-    ./bin/examine.py examples/simple_particle.py
+./bin/examine.py examples/simple_particle.py
 ```
 
 ```
-    ./bin/examine.py examples/example_env_examine.jsonnet
+./bin/examine.py examples/example_env_examine.jsonnet
 ```
 
 ## Acknowledgements
