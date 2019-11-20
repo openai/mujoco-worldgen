@@ -2,7 +2,7 @@
 
 # Worldgen: Randomized MuJoCo environments
 
-Worldgen allows users to generate complex, heavily randomized environments environments. Examples of such environments can be found in the `examples` folder.
+Worldgen allows users to generate complex, heavily randomized environments. Examples of such environments can be found in the `examples` folder.
 
 Actions in `action_space` are all actuators of objects added during world building. Not all objects will have actuators, but some do (e.g. `ObjFromXML('particle')` and `ObjFromXML('particle_hinge')`). You can examine the meaning of a given action by looking at the xml file of the object in `assets/xmls/.../main.xml`
 
